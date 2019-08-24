@@ -1,0 +1,5 @@
+G90 (set absolute distance mode)
+G1 X1.2 Y-3 F10 (linear move at a feed rate of 10 from current position to X1.2 Y-3)
+Z-2.3 (linear move at same feed rate from current position to Z-2.3)
+Z1 F25 (linear move at a feed rate of 25 from current position to Z1)
+M2 (end program)
