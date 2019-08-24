@@ -1,0 +1,82 @@
+#!/usr/bin/python3
+# -*- coding:Utf-8 -*-
+from tkinter import *
+
+class ButtonFlipFlop(Button):
+	ON = True
+	OFF = False
+	def __init__(self, boss, imgon, imgoff, action = None, bd = 4, overrelief = 'GROOVE', cursor =  'hand2', **Arguments):
+		Button.__init__(self, boss, image = imgon, command = self.click, **Arguments)
+		self.status	= ON
+		self.blink	= False
+		self.action	= action
+		self.imgon	= imgon
+		self.imgoff	= imgoff
+		self.changeBlink()
+
+	def click(self):															# Méthode de la class qui sera lancée à chaque click sur le bouton
+		if (self.status == ON):
+			self.status = OFF
+			self.config(image = self.imgoff)
+		else:
+			self.status = ON
+			self.config(image = self.imgon)
+		btnCode = self.cget("text")												# Récupération du code attribué au bouton
+		self.action(btnCode)													# Lancement de fonction externe avec un argument
+
+	def changeBlink(self):														# Fonction clignotement --> En cours
+		if (self.status == OFF):												# Blink uniquement quand le bouton est en phase actif
+			if (self.blink == True):
+				self.blink = False
+				self.config(image = self.imgon)
+			else:
+				self.blink = True
+				self.config(image = self.imgoff)
+		self.after(500, self.changeBlink)										# Prochain blink
+
+	def stop(self):
+		self.status = ON
+		self.blink = False
+		self.config(image = self.imgon)
+
+	def enabled(self):
+		self.status = ON
+		self.blink = False
+		self.config(state = NORMAL)
+
+	def disabled(self):
+		self.status = ON
+		self.blink = False
+		self.config(state = DISABLED)
+
+# Programme principal de test
+
+if __name__ == "__main__":
+
+	def actionExt(btnCode):
+		print("click", btnCode)
+
+	w = Tk()
+	w.title('class ButtonFlipFlop')
+	w.config(bg = "khaki")
+	w.geometry("+50+50")
+
+	refIconARU = PhotoImage(file = 'btnARU.gif')
+	refIconPOZ = PhotoImage(file = 'btnPOZ.gif')
+	refIconVOZ = PhotoImage(file = 'btnVOZ.gif')
+	refIconPXY = PhotoImage(file = 'btnPXY.gif')
+	refIconVXY = PhotoImage(file = 'btnVXY.gif')
+	refIconMAN = PhotoImage(file = 'btnMAN.gif')
+	refIconMAR = PhotoImage(file = 'btnMAR.gif')
+	refIconMAB = PhotoImage(file = 'btnMAB.gif')
+
+	btnARU = Button(w, text = "ARU", image = refIconARU, relief = GROOVE, command = lambda btnCode = "ARU": actionExt(btnCode))
+#	btnARU.config(command = lambda btnCode = "ARU": actionExt(btnCode))
+	btnARU.pack()
+	btnPOZ = ButtonFlipFlop(w, text = "POZ", imgon = refIconPOZ, imgoff = refIconVOZ, relief = GROOVE, action = actionExt)
+	btnPOZ.pack()
+	btnPXY = ButtonFlipFlop(w, text = "PXY", imgon = refIconPXY, imgoff = refIconVXY, relief = GROOVE, action = actionExt)
+	btnPXY.pack()
+	btnMAN = ButtonFlipFlop(w, text = "MAN", imgon = refIconMAN, imgoff = refIconMAR, relief = GROOVE, action = actionExt)
+	btnMAN.pack()
+	w.mainloop()

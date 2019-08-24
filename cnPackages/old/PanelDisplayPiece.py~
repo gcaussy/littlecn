@@ -1,0 +1,21 @@
+#!/usr/bin/python3
+# -*- coding:Utf-8 -*-
+from tkinter import *
+
+class PanelDisplayPiece(Frame):
+	def __init__(self, boss, bg = 'ivory', **Arguments):
+		Frame.__init__(self, boss, bg = bg)
+		Label(self, text ="Affichage de la pièce à usiner", font = "{courier new} 12 bold", bg = bg, fg = "blue").pack()
+		self.can = Canvas(self, width = 400, height = 400, bd = 2, bg = "grey")
+		self.can.pack()
+
+# Programme principal de test
+# ---------------------------
+
+if __name__ == "__main__":
+
+	w = Tk()
+	w.title('class PanelDisplayPiece')
+
+
+	w.mainloop()

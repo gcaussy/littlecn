@@ -1,0 +1,82 @@
+#!/usr/bin/python3
+# -*- coding:Utf-8 -*-
+from tkinter import *
+try:
+	from cnPackages.EntryRegx import EntryRegx
+except:
+	from EntryRegx import EntryRegx
+
+class PanelSettingsMan(Frame):
+	def __init__(self, boss, baseFont = "Courier 8 normal", bg = "ivory", width = 50, height = 50):
+		Frame.__init__(self, boss, bg = bg)
+		Label(self, text ="Déplacement en mm", font = "{courier new} 10 bold", bg = bg, fg = "blue").grid(row = 1, column = 1, columnspan = 4)
+		self.spinbox = Spinbox(self, values=(0.1, 1, 10), justify='center')
+		self.spinbox.grid(row = 2, column = 1, columnspan = 4)
+
+		Label(self, text ="Vitesse de déplacement", font = "{courier new} 10 bold", bg = bg, fg = "blue").grid(row = 3, column = 1, columnspan = 4)
+		self.btnVMO = Button(self, text = "-50")						# Bouton "-50"
+		self.btnVMO.config(command = self._vitesseMoins)
+		self.btnVMO.grid(row = 4, column = 1)
+		self.entSpeed = EntryRegx(self, regx = "^[0-9]+$", text = "250")
+#		self.entSpeed = Entry(self, justify = 'right')
+		self.entSpeed.grid(row = 4, column = 2, columnspan = 2)
+		self.btnVPL = Button(self, text = "+50")						# Bouton "+50"
+		self.btnVPL.config(command = self._vitessePlus)
+		self.btnVPL.grid(row = 4, column = 4)
+		self.entSpeed.insert(0, "250")
+
+	def disabledAll(self):
+		self.spinbox.config(state = 'disabled')
+		self.btnVMO.config(state = 'disabled')
+		self.btnVPL.config(state = 'disabled')
+		self.btnVMO.config(state = 'disabled')
+		self.entSpeed.config(state = 'disabled')
+
+	def enabledAll(self):
+		self.spinbox.config(state = 'normal')
+		self.btnVMO.config(state = 'normal')
+		self.btnVPL.config(state = 'normal')
+		self.btnVMO.config(state = 'normal')
+		self.entSpeed.config(state = 'normal')
+
+	def _vitesseMoins(self):
+		valInt = int(self.entSpeed.get())
+		if (valInt >= 50):
+			valInt -= 50
+		self.entSpeed.delete(0, END)
+		self.entSpeed.insert(0, str(valInt))
+
+	def _vitessePlus(self):
+		valInt = int(self.entSpeed.get())
+		valInt += 50
+		self.entSpeed.delete(0, END)
+		self.entSpeed.insert(0, str(valInt))
+
+	def getFloatPas(self):
+		return(float(self.spinbox.get()))
+
+	def getIntVitesse(self):
+		return(int(self.entSpeed.get()))
+
+
+# Programme principal de test
+# ---------------------------
+
+if __name__ == "__main__":
+
+	def get():
+		print(sb.getFloatPas())
+		print(sb.getIntVitesse())
+
+	w = Tk()
+	w.title('Test de la classe PanelSettingsMan')
+
+	sb = PanelSettingsMan(w)
+	sb.pack()
+	btg = Button(w, text="Get", command = get)
+	btg.pack(side = LEFT)
+	btd = Button(w, text="Disabled", command = sb.disabledAll)
+	btd.pack(side = LEFT)
+	bte = Button(w, text="Enabled", command = sb.enabledAll)
+	bte.pack(side = LEFT)
+	w.mainloop()

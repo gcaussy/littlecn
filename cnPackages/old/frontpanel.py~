@@ -1,0 +1,71 @@
+#!/usr/bin/python3
+# -*- coding:Utf-8 -*-
+from tkinter import *
+try:
+	from cnPackages.PanelButtonsCmd			import PanelButtonsCmd
+	from cnPackages.DataParam				import DataParam
+	from cnPackages.PanelDisplayXYZ			import PanelDisplayXYZ
+	from cnPackages.PanelButtonsXYZ			import PanelButtonsXYZ
+	from cnPackages.PanelSettingsMan		import PanelSettingsMan
+	from cnPackages.PanelDisplayGcode		import PanelDisplayGcode
+	from cnPackages.PanelDisplayCmdsMotors	import PanelDisplayCmdsMotors
+	from cnPackages.PanelDisplayPiece		import PanelDisplayPiece
+except:
+	from PanelButtonsCmd		import PanelButtonsCmd
+	from DataParam				import DataParam
+	from PanelDisplayXYZ		import PanelDisplayXYZ
+	from PanelButtonsXYZ		import PanelButtonsXYZ
+	from PanelSettingsMan		import PanelSettingsMan
+	from PanelDisplayGcode		import PanelDisplayGcode
+	from PanelDisplayCmdMoteur	import PanelDisplayCmdMoteur
+	from PanelDisplayPiece		import PanelDisplayPiece
+
+def frontPanel(win):
+	# Colonne 1
+	frm1 = Frame(win)
+	frm1.grid(row = 1, column = 1, sticky='n')
+	pbtnc = PanelButtonsCmd(frm1, fctExt = btnAction)
+	pbtnc.pack()
+	# Colonne 2
+	frm2 = Frame(win)
+	frm2.grid(row = 1, column = 2, sticky='n')
+	dt = DataParam()
+	pdisxyz = PanelDisplayXYZ(frm2, data = dt)
+	pdisxyz.pack()
+	pbtnxyz = PanelButtonsXYZ(frm2, cmd = btnActionExt)
+	pbtnxyz.pack()
+	psetman = PanelSettingsMan(frm2)
+	psetman.pack()
+	# Colonne 3
+	frm3 = Frame(win)
+	frm3.grid(row = 1, column = 3, sticky='n')
+	pdisgcod = PanelDisplayGcode(frm3)
+	pdisgcod.pack()
+	pdiscmdm = PanelDisplayCmdsMotors(frm3)
+	pdiscmdm.pack()
+	# Colonne 4
+	frm4 = Frame(win)
+	frm4.grid(row = 1, column = 4, sticky='n')
+	pdispiece = PanelDisplayPiece(frm4)
+	pdispiece.pack()
+	#
+
+
+
+
+# Programme principal de test
+# ---------------------------
+
+if __name__ == "__main__":
+
+	def btnAction(btnCode):
+		pass
+
+	def btnActionExt(btnCode):
+		pass
+
+	w = Tk()
+	w.title('class PanelDisplayCmdsMotors')
+	frontPanel(w)
+
+	w.mainloop()

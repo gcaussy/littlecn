@@ -1,0 +1,163 @@
+#!/usr/bin/python3
+# -*- coding:Utf-8 -*-
+from tkinter import *
+
+class DataParam(object):
+	def __init__(self):
+# Stockage des valeurs de paramètrage machine. elles sont stockées sous forme string, comme elles ont été saisies
+		self.keysList = 'x', 'y', 'z'
+		self.courseMax		= {'x': '300',			'y': '300',			'z': '300'}			# Course maximum selon les 3 axes en mm (Dépend du matériel)
+		self.deplParPuls	= {'x':   '0.003125',	'y':   '0.003125',	'z':   '0.003125'}	# Déplacement de l'outil en millimètres effectué à chaque puls sur le moteur
+		self.vitesseMaxDepl	= {'x':'1000',			'y':'1000',			'z':'1000'}			# Vitesse de déplacement maximum de l'outil en millimètres par minute
+		self.frequencePuls	= {'x':'5333',			'y':'5333',			'z':'5333'}			# Fréquence d'envoi des pulses vers le driver du moteur
+		self.accelerMax		= {'x':   '3',			'y':   '3',			'z':   '3'}			# Accélération maximum sur un déplacement d'outil en m/s/s
+		self.invSensRot		= {'x': False,			'y': False,			'z':   False}		# Sens de rotation
+		self.maxRotBroche	= "2000"														# Vitesse maximum de rotation de la broche
+
+# Récupération des valeurs de paramètrage à des fins d'affichage. Donc sous forme de string, telles qu'elles ont été saisies
+
+	def loadCourseMax(self, key):
+		if (key in self.keysList):
+			return(self.courseMax[key])
+
+	def loadDeplParPuls(self, key):
+		if (key in self.keysList):
+			return(self.deplParPuls[key])
+
+	def loadVitesseMaxDepl(self, key):
+		if (key in self.keysList):
+			return(self.vitesseMaxDepl[key])
+
+	def loadFrequencePuls(self, key):
+		if (key in self.keysList):
+			return(self.frequencePuls[key])
+
+	def loadAccelerMax(self, key):
+		if (key in self.keysList):
+			return(self.accelerMax[key])
+
+	def loadInvSensRot(self, key):
+		if (key in self.keysList):
+			return(self.invSensRot[key])
+
+	def loadMaxRotBroche(self):
+		return(self.maxRotBroche)
+
+# Sauvegarde des valeurs de paramètrage machine
+
+	def saveStrCourseMax(self, key, strVal):
+		if (key in self.keysList):
+			self.courseMax[key] = strVal
+
+	def saveStrDeplParPuls(self, key, strVal):
+		if (key in self.keysList):
+			self.deplParPuls[key] = strVal
+
+	def saveStrVitesseMaxDepl(self, key, strVal):
+		if (key in self.keysList):
+			self.vitesseMaxDepl[key] = strVal
+
+	def saveStrFrequencePuls(self, key, strVal):
+		if (key in self.keysList):
+			self.frequencePuls[key] = strVal
+
+	def saveStrAccelerMax(self, key, strVal):
+		if (key in self.keysList):
+			self.accelerMax[key] = strVal
+
+	def saveStrInvSensRot(self, key, strVal):
+		if (key in self.keysList):
+			self.invSensRot[key] = strVal
+
+	def saveStrMaxRotBroche(self, strVal):
+		self.maxRotBroche = strVal
+
+# Récupération des valeurs de paramètrage machine à des fins de calcul. Donc sous forme de float
+
+	def getFloatCourseMax(self, key):
+		if (key in self.keysList):
+			return(float(self.courseMax[key]))
+
+	def getFloatDeplParPuls(self, key):
+		if (key in self.keysList):
+			return(float(self.deplParPuls[key]))
+
+	def getFloatVitesseMaxDepl(self, key):
+		if (key in self.keysList):
+			return(float(self.vitesseMaxDepl[key]))
+
+	def getFloatFrequencePuls(self, key):
+		if (key in self.keysList):
+			return(float(self.frequencePuls[key]))
+
+	def getFloatAccelerMax(self, key):
+		if (key in self.keysList):
+			return(float(self.accelerMax[key]))
+
+	def getFloatInvSensRot(self, key):
+		if (key in self.keysList):
+			return(float(self.invSensRot[key]))
+
+	def getFloatMaxRotBroche(self):
+		return(float(self.maxRotBroche))
+
+
+
+# Méthodes de test et mise au point
+
+	def printParam1(self):														# Méthode utilisée pour les tests
+		print("Print des données stockées")
+		for key in self.courseMax.keys():
+			print("courseMax {} = {}".format(key, self.courseMax[key]))
+		for key in self.deplParPuls.keys():
+			print("deplParPuls {} = {}".format(key, self.deplParPuls[key]))
+		for key in self.vitesseMaxDepl.keys():
+			print("vitesseMaxDepl {} = {}".format(key, self.vitesseMaxDepl[key]))
+		for key in self.frequencePuls.keys():
+			print("frequencePuls {} = {}".format(key, self.frequencePuls[key]))
+		for key in self.accelerMax.keys():
+			print("accelerMax {} = {}".format(key, self.accelerMax[key]))
+		for key in self.invSensRot.keys():
+			print("invSensRot {} = {}".format(key, self.invSensRot[key]))
+		print("self.maxRotBroche = {}".format(self.maxRotBroche))
+
+# Programme principal de test
+
+if __name__ == "__main__":
+
+	w = Tk()
+	w.title('Test de la class DataParam')
+	w.config(bg = "khaki")
+	w.geometry("200x50+50+50")
+
+	data = DataParam()
+	print(data.loadCourseMax('x'))
+	print(data.loadCourseMax('y'))
+	print(data.loadCourseMax('z'))
+
+	print(data.loadDeplParPuls('x'))
+	print(data.loadDeplParPuls('y'))
+	print(data.loadDeplParPuls('z'))
+
+	print(data.loadVitesseMaxDepl('x'))
+	print(data.loadVitesseMaxDepl('y'))
+	print(data.loadVitesseMaxDepl('z'))
+
+	print(data.loadFrequencePuls('x'))
+	print(data.loadFrequencePuls('y'))
+	print(data.loadFrequencePuls('z'))
+
+	print(data.loadAccelerMax('x'))
+	print(data.loadAccelerMax('y'))
+	print(data.loadAccelerMax('z'))
+
+	print(data.loadInvSensRot('x'))
+	print(data.loadInvSensRot('y'))
+	print(data.loadInvSensRot('z'))
+
+	print(data.loadMaxRotBroche())
+
+	btnParam = Button(w, text="Print data", command=data.printParam1)
+	btnParam.pack(side = LEFT)
+
+	w.mainloop()

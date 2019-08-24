@@ -1,0 +1,48 @@
+#!/usr/bin/python3
+# -*- coding:Utf-8 -*-
+from tkinter import *
+import re
+
+
+class EntryRegx(Entry):
+	def __init__(self, boss, regx="(^[0-9]+$)|(^$)", **Arguments):
+		Entry.__init__(self, boss, width = 10, justify = RIGHT, state = NORMAL, **Arguments)
+		self.bind('<Key>', lambda eventObj: handler(self, eventObj))
+		self.regx = regx
+		self.ok = False
+
+		def handler(self, eventObj):
+			if (eventObj.char.isalnum()):
+				str = self.get() + eventObj.char
+				validEntry(self, str)
+			else:
+				if (eventObj.keysym == 'BackSpace'):
+					str = self.get()
+					l = len(str)
+					str = str[0:l-1]
+					validEntry(self, str)
+
+		def validEntry(self, str):
+			ret = re.match(self.regx, str)
+			if (ret == None):
+				self.configure(bg = "red")
+				self.ok = False
+			else:
+				self.configure(bg = "white")
+				self.ok = True
+
+	def getOk(self, str):
+		return(self.validEntry(self, str))
+
+
+# Programme principal de test
+
+if __name__ == "__main__":
+
+	w = Tk()
+	w.title('Test de la class EntryRegx')
+	w.config(bg = "khaki")
+	w.geometry("200x100+50+50")
+	erx = EntryRegx(w, regx = "(^[0-9]+$)|(^$)")
+	erx.pack()
+	w.mainloop()

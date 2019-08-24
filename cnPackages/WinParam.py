@@ -1,0 +1,213 @@
+#!/usr/bin/python3
+# -*- coding:Utf-8 -*-
+from tkinter import *
+import re
+try:
+	from EntryRegx import EntryRegx
+	from DataParam import DataParam
+except:
+	from cnPackages.EntryRegx import EntryRegx
+	from cnPackages.DataParam import DataParam
+
+
+
+# Fenêtre gestion des paramètres machine
+# ======================================
+
+class WinParam(Toplevel):
+	def __init__(self, boss, refDataParam, **Arguments):
+		Toplevel.__init__(self, boss, **Arguments)
+		self.refDataParam = refDataParam
+		self.refIcone = PhotoImage(file = './images/btnPAR.gif')
+		self.title('Paramètres machine')
+		self.geometry("750x300+300+300")
+
+		Label(self, image = self.refIcone, anchor='w').grid(row = 1, column = 1, sticky = W)
+		Label(self, text = "X", font = "{courier new} 12 bold", foreground = "blue").grid(row = 1, column = 2)
+		Label(self, text = "Y", font = "{courier new} 12 bold", foreground = "blue").grid(row = 1, column = 3)
+		Label(self, text = "Z", font = "{courier new} 12 bold", foreground = "blue").grid(row = 1, column = 4)
+
+		Label(self, text = "1-Course maximum en millimètres").grid(row = 2, column = 1, sticky = W)
+		Label(self, text = "2-Déplacement/pulse en millimètres").grid(row = 3, column = 1, sticky = W)
+		Label(self, text = "3-Vitesse maximum de déplacement en millimètres/minute").grid(row = 4, column = 1, sticky = W)
+		Label(self, text = "4-Fréquence nécessaire d'envoi de pulses vers le driver en hertz").grid(row = 5, column = 1, sticky = W)
+		Label(self, text = "5-Accélération maxi en mètres/seconde/seconde").grid(row = 6, column = 1, sticky = W)
+		Label(self, text = "6-Inversion du sens de déplacement").grid(row = 7, column = 1, sticky = W)
+		Label(self, text = "7-Vitesse de rotation maximum de la broche en tours/minute").grid(row = 8, column = 1, sticky = W)
+
+# 1-Course maximum en millimètre
+		self.en1x = EntryRegx(self, regx = "(^[0-9]+$)|(^$)")
+		self.en1x.grid(row = 2, column = 2)
+		self.en1y = EntryRegx(self, regx = "(^[0-9]+$)|(^$)")
+		self.en1y.grid(row = 2, column = 3)
+		self.en1z = EntryRegx(self, regx = "(^[0-9]+$)|(^$)")
+		self.en1z.grid(row = 2, column = 4)
+
+# Déplacement/pulse en millimètre
+		self.en2x = EntryRegx(self, regx = "(^[0-9]+.[0-9]+$)|(^$)")
+		self.en2x.grid(row = 3, column = 2)
+		self.en2y = EntryRegx(self, regx = "(^[0-9]+.[0-9]+$)|(^$)")
+		self.en2y.grid(row = 3, column = 3)
+		self.en2z = EntryRegx(self, regx = "(^[0-9]+.[0-9]+$)|(^$)")
+		self.en2z.grid(row = 3, column = 4)
+
+# Vitesse maximum de déplacement en millimètre/minute
+		self.en3x = EntryRegx(self, regx = "(^[0-9]+$)|(^$)")
+		self.en3x.grid(row = 4, column = 2)
+		self.en3y = EntryRegx(self, regx = "(^[0-9]+$)|(^$)")
+		self.en3y.grid(row = 4, column = 3)
+		self.en3z = EntryRegx(self, regx = "(^[0-9]+$)|(^$)")
+		self.en3z.grid(row = 4, column = 4)
+
+# Fréquence calculée d'envoi de pulses sur le driver du moteur pour arriver à cette vitesse de déplacement
+		self.encx = Entry(self, width = 10, justify = RIGHT)
+		self.encx.grid(row = 5, column = 2)
+		self.ency = Entry(self, width = 10, justify = RIGHT)
+		self.ency.grid(row = 5, column = 3)
+		self.encz = Entry(self, width = 10, justify = RIGHT)
+		self.encz.grid(row = 5, column = 4)
+
+# Accélération maxi en mètre/seconde/seconde
+		self.en4x = EntryRegx(self, regx = "(^[0-9]+$)|(^$)")
+		self.en4x.grid(row = 6, column = 2)
+		self.en4y = EntryRegx(self, regx = "(^[0-9]+$)|(^$)")
+		self.en4y.grid(row = 6, column = 3)
+		self.en4z = EntryRegx(self, regx = "(^[0-9]+$)|(^$)")
+		self.en4z.grid(row = 6, column = 4)
+
+# Inversion du sens de déplacement
+		self.en5x = Checkbutton(self, text='', onvalue=True, offvalue=False)
+		self.en5x.grid(row = 7, column = 2)
+		self.en5y = Checkbutton(self, text='', onvalue=True, offvalue=False)
+		self.en5y.grid(row = 7, column = 3)
+		self.en5z = Checkbutton(self, text='', onvalue=True, offvalue=False)
+		self.en5z.grid(row = 7, column = 4)
+
+# Vitesse de rotation maximum de la broche
+		self.en6 = EntryRegx(self, regx = "(^[0-9]+$)|(^$)")
+		self.en6.grid(row = 8, column = 2, columnspan = 3)
+
+		frmBt = Frame(self, pady = 10)
+		frmBt.grid(row = 9, column = 1, columnspan = 4, sticky = E)
+		Button(frmBt, text = "Cancel", command = self.destroy).pack(side = RIGHT)
+		Button(frmBt, text = "Enregistrer", command = self.enregForm).pack(side = RIGHT)
+		Button(frmBt, text = "Vérifier", command = self.validForm).pack(side = RIGHT)
+
+
+		self.en1x.insert(0, refDataParam.loadCourseMax('x'))
+		self.en1y.insert(0, refDataParam.loadCourseMax('y'))
+		self.en1z.insert(0, refDataParam.loadCourseMax('z'))
+
+		self.en2x.insert(0, refDataParam.loadDeplParPuls('x'))
+		self.en2y.insert(0, refDataParam.loadDeplParPuls('y'))
+		self.en2z.insert(0, refDataParam.loadDeplParPuls('z'))
+
+		self.en3x.insert(0, refDataParam.loadVitesseMaxDepl('x'))
+		self.en3y.insert(0, refDataParam.loadVitesseMaxDepl('y'))
+		self.en3z.insert(0, refDataParam.loadVitesseMaxDepl('z'))
+
+		self.encx.insert(0, refDataParam.loadFrequencePuls('x'))
+		self.ency.insert(0, refDataParam.loadFrequencePuls('y'))
+		self.encz.insert(0, refDataParam.loadFrequencePuls('z'))
+
+		self.en4x.insert(0, refDataParam.loadAccelerMax('x'))
+		self.en4y.insert(0, refDataParam.loadAccelerMax('y'))
+		self.en4z.insert(0, refDataParam.loadAccelerMax('z'))
+
+#		self.en5x.insert(0, ff.format((refDataParam.getFloatInvSensRot('x'))))
+		self.en6.insert(0, refDataParam.loadMaxRotBroche())
+
+		self.entryListGrp1 = [self.en1x, self.en1y, self.en1z]
+		self.entryListGrp3 = [self.en3x, self.en3y, self.en3z]
+		self.entryListGrp2 = [self.en2x, self.en2y, self.en2z]
+		self.entryListGrp4 = [self.en4x, self.en4y, self.en4z]
+		self.entryListGrp5 = [self.en5x, self.en5y, self.en5z]				# Le groupe 5 sont des CkeckButton et ont un traitement séparé
+		self.entryListGrp6 = [self.en6]
+		self.entryListGrpf = [self.encx, self.ency, self.encz]
+
+		for en in self.entryListGrpf:
+			en.config(state = 'readonly')
+
+	def storeData(self):
+		self.refDataParam.saveStrCourseMax('x', self.en1x.get())
+		self.refDataParam.saveStrCourseMax('y', self.en1y.get())
+		self.refDataParam.saveStrCourseMax('z', self.en1z.get())
+
+		self.refDataParam.saveStrDeplParPuls('x', self.en2x.get())
+		self.refDataParam.saveStrDeplParPuls('y', self.en2y.get())
+		self.refDataParam.saveStrDeplParPuls('z', self.en2z.get())
+
+		self.refDataParam.saveStrVitesseMaxDepl('x', self.en3x.get())
+		self.refDataParam.saveStrVitesseMaxDepl('y', self.en3y.get())
+		self.refDataParam.saveStrVitesseMaxDepl('z', self.en3z.get())
+
+		self.refDataParam.saveStrFrequencePuls('x', self.encx.get())
+		self.refDataParam.saveStrFrequencePuls('y', self.ency.get())
+		self.refDataParam.saveStrFrequencePuls('z', self.encz.get())
+
+		self.refDataParam.saveStrAccelerMax('x', self.en4x.get())
+		self.refDataParam.saveStrAccelerMax('y', self.en4y.get())
+		self.refDataParam.saveStrAccelerMax('z', self.en4z.get())
+
+		self.refDataParam.saveStrMaxRotBroche(self.en6.get())
+
+	def _calculFreq(self):							# en3x / 60 / en2x
+		for idx in [0, 1, 2]:
+			en2 = self.entryListGrp2[idx]
+			en3 = self.entryListGrp3[idx]
+			enf = self.entryListGrpf[idx]
+			freq = float(en3.get()) / 60 / float(en2.get())
+			enf.config(state = NORMAL)
+			enf.delete(0, END)
+			enf.insert(0, "{:0.1f}".format(freq))
+			enf.config(state = "readonly")
+
+	def validForm(self):
+		self._calculFreq()
+		nbKo = 0
+#		On vérifie le format des données contenues dans les Entry 1 3 4 et 6
+		for en in self.entryListGrp1 + self.entryListGrp3 + self.entryListGrp4 + self.entryListGrp6:
+			strVal = en.get()
+			ret = re.match("^[0-9]+$", strVal)
+			if (ret is None):
+				en.config(bg = "red")
+				nbKo += 1
+#		On vérifie le format des données contenues dans les Entry 2
+		for en in self.entryListGrp2:
+			strVal = en.get()
+			ret = re.match("^[0-9]+.[0-9]+$", strVal)
+			if (ret is None):
+				en.config(bg = "red")
+				nbKo += 1
+		return(nbKo)
+
+	def enregForm(self):
+		nbKo = self.validForm()
+		if (nbKo == 0):
+			self.storeData()
+			self.destroy()
+
+
+# Programme principal de test
+
+if __name__ == "__main__":
+
+	def actionPAR():
+		winPar = WinParam(w, dt)
+		return(True)
+
+	def actionPrint():
+		dt.printParam1()
+		return()
+
+	w = Tk()
+	w.title('Test des classes WinParam et EntryRegx')
+	w.config(bg = "khaki")
+	w.geometry("200x100+50+50")
+	dt = DataParam()
+	btnParam = Button(w, text="Paramètres", command=actionPAR)
+	btnParam.pack(side = LEFT)
+	btnPrint = Button(w, text="Print", command=actionPrint)
+	btnPrint.pack(side = LEFT)
+	w.mainloop()
+

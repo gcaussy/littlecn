@@ -1,0 +1,47 @@
+#!/usr/bin/python3
+# -*- coding:Utf-8 -*-
+from tkinter import *
+
+class ScrolledText(Frame):
+	def __init__(self, boss, baseFont = "Courier 8 normal", bg = 'ivory', nZfill = 4, width = 30, height = 30):
+		Frame.__init__(self, boss, bd = 2, relief = SUNKEN)
+		self.nZfill = nZfill
+		self.height = height
+		self.text = Text(self, font = baseFont, bg = bg, bd = 1, width = width, height = height)
+		scroll = Scrollbar(self, bd = 1, command = self.text.yview)
+		self.text.configure(yscrollcommand = scroll.set)
+		self.text.pack(side = LEFT, expand = YES, fill = BOTH, padx = 2, pady = 2)
+		scroll.pack(side = RIGHT, expand = NO, fill = Y, padx = 2, pady = 2)
+		self.lineCount = 0
+		self.text.tag_configure("rouge", foreground = "red",   font = baseFont)
+		self.text.tag_configure("bleu",  foreground = "blue",  font = baseFont)
+		self.text.tag_configure("noir",  foreground = "black", font = baseFont)
+		self.text.tag_configure("vert",  foreground = "green", font = baseFont)
+		self.text.tag_configure("gris",  foreground = "gray",  font = baseFont, background = 'gray95')
+
+	def insertChar(self, char, color):
+		self.char = char
+		self.color = color
+		self.text.insert(END, self.char, color)
+
+	def insertLine(self, txt, color):
+		self.lineCount += 1
+		strCount = str(self.lineCount).zfill(self.nZfill)
+		self.text.insert(END, "{} {}".format(strCount, txt), color)
+		n = int((self.lineCount / self.height))
+#		self.text.yview_moveto(fraction)
+		self.text.yview_scroll(n, "pages")
+
+	def clear(self):
+		self.text.config(state=NORMAL)
+		self.text.delete('1.0', END)
+
+
+# Programme principal de test
+
+if __name__ == "__main__":
+	w = Tk()
+	w.title('Front panel')
+	scr = ScrolledText(w, width = 50, height = 25)
+	scr.pack()
+	w.mainloop()
