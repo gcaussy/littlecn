@@ -1,0 +1,28 @@
+M6 T
+G2 I,J,K ou R,P
+G3 I,J,K ou R,P
+
+
+class PointXY(Object):
+	def __init__(self):
+		self.xValue = 0.0
+		self.yValue = 0.0
+		self.xOk = False
+		self.yOk = False
+
+	def setX(self, value):
+		self.xValue = value
+		self.xOk = True
+
+	def setY(self, value):
+		self.yValue = value
+		self.yOk = True
+
+	def clear(self):
+		self.xOk = False
+		self.yOk = False
+
+	def getX(self):
+		if (self.xOk == True):
+			return(self.xValue)
+
